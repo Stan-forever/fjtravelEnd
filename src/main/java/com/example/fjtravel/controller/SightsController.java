@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/appleyk/sights") //restful风格的api接口
+@RequestMapping("/fjtravel/sights") //restful风格的api接口
 public class SightsController {
 
 	@Autowired

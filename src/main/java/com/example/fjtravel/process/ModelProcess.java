@@ -135,6 +135,9 @@ public class ModelProcess {
 			}  else if (termStr.contains("ng")) { //ng 类型
 				abstractQuery += "ng ";
 				abstractMap.put("ng", word);
+			}  else if (termStr.contains("chengshi")) { //ng 类型
+				abstractQuery += "chengshi ";
+				abstractMap.put("chengshi", word);
 			}
 			else {
 				abstractQuery += word + " ";
@@ -453,7 +456,13 @@ public class ModelProcess {
 			LabeledPoint train_one = new LabeledPoint(12.0, Vectors.dense(array));
 			train_list.add(train_one);
 		}
-
+		String citySights = loadFile("question/13某城市有哪些景点.txt");
+		sentences = citySights.split("`");
+		for (String sentence : sentences) {
+			double[] array = sentenceToArrays(sentence);
+			LabeledPoint train_one = new LabeledPoint(13.0, Vectors.dense(array));
+			train_list.add(train_one);
+		}
 			/**
 			 * SPARK的核心是RDD(弹性分布式数据集)
 			 * Spark是Scala写的,JavaRDD就是Spark为Java写的一套API
@@ -537,6 +546,7 @@ public class ModelProcess {
 		System.out.println("问题模板分类【10】概率："+vRes.toArray()[10]);
 		System.out.println("问题模板分类【11】概率："+vRes.toArray()[11]);
 		System.out.println("问题模板分类【12】概率："+vRes.toArray()[12]);
+		System.out.println("问题模板分类【13】概率："+vRes.toArray()[13]);
 		return questionsPattern.get(index);
 	}
 

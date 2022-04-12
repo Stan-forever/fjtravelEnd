@@ -29,7 +29,8 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Value("${HanLP.CustomDictionary.path.scoreDict}")
 	private String scoreDictPath;
-
+	@Value("${HanLP.CustomDictionary.path.cityDict}")
+	private String cityDictPath;
 //	@Value("${HanLP.CustomDictionary.path.addressDict}")
 //	private String addressDictPath;
 	@Autowired
@@ -61,6 +62,7 @@ public class QuestionServiceImpl implements QuestionService {
 		 * 加载自定义的评分字典 == 设置词性 x 0
 		 */
 		loadScoreDict(scoreDictPath);
+		loadCityDict(cityDictPath);
 //		loadAddressDict(addressDictPath);
 		ArrayList<String> reStrings = queryProcess.analyQuery(question);
 		int modelIndex = Integer.valueOf(reStrings.get(0));
@@ -185,6 +187,18 @@ public class QuestionServiceImpl implements QuestionService {
 				name = reStrings.get(1);
 				answer = questionRepository.getSightsTypes(name);
 				break;
+			case 13:
+				/**
+				 * nnt 电影类型 == 演员参演的电影类型有哪些
+				 */
+				name = reStrings.get(1);
+				List<String> citySights = questionRepository.citySights(name);
+				if (citySights.size() == 0) {
+					answer = null;
+				} else {
+					answer = citySights.toString().replace("[", "").replace("]", "");
+				}
+				break;
 			default:
 				break;
 		}
@@ -247,6 +261,17 @@ public class QuestionServiceImpl implements QuestionService {
 			e1.printStackTrace();
 		}
 	}
+	public void loadCityDict(String path) {
+
+		File file = new File(path);
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			addCustomDictionary(br, 3);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	}
 //	public void loadAddressDict(String path) {
 //
 //		File file = new File(path);
@@ -288,6 +313,8 @@ public class QuestionServiceImpl implements QuestionService {
 				case 2:
 					CustomDictionary.add(word, "x 0");
 					break;
+				case 3:
+					CustomDictionary.add(word,"chengshi 0")	;
 				default:
 					break;
 				}

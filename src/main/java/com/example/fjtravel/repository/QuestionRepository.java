@@ -1,6 +1,6 @@
 package com.example.fjtravel.repository;
 
-import com.example.fjtravel.node.Movie;
+import com.example.fjtravel.node.Sights;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +14,7 @@ import java.util.List;
  * @blob   http://blog.csdn.net/appleyk
  * @date   2018年5月10日-下午3:48:51
  */
-public interface QuestionRepository extends Neo4jRepository<Movie,Long> {
+public interface QuestionRepository extends Neo4jRepository<Sights,Long> {
 
 	/**
 	 * 0 对应问题模板0 == nm(景点) 评分
@@ -124,22 +124,30 @@ public interface QuestionRepository extends Neo4jRepository<Movie,Long> {
 	 *            地点名字
 	 * @return 返回某个地点的所有景点
 	 */
-	@Query("match(n:City)-[:have]->(m:Sights) where n.name={name} return m.name")
+	@Query("match(n:District)-[:has]->(m:Sights) where n.name={name} return m.name")
 	List<String> getHaveSights(@Param("name") String name);
-
+	@Query("match(n:City)-[:have]->(m:Sights) where n.name={name} return m.name")
+	List<String> citySights(@Param("name") String name);
+	/**
+	 * 10 对应问题模板10 == nnt(地点) 某地点有哪些景点
+	 *
+	 * @param name
+	 *            地点名字
+	 * @return 返回某个地点的所有景点
+	 */
 
 	/**
 	 * 11 对应问题模板11 == nnt(地点) ng(景点类型) 景点
 	 *
 	 * @param name
 	 *            地点名
-	 * @param sname
+	 * @param gname
 	 *            景点类型名称
 	 * @return 返回电影名称列表
 	 */
-	@Query("match(n:City)-[:have]-(m:Sights) where n.name ={name} "
-			+ "match(g:Genre)-[:is]-(m) where g.name=~{name} return distinct  m.name")
-	List<String> getHaveSightsByType(@Param("name") String name, @Param("sname") String sname);
+	@Query("match(n:District)-[:has]-(m:Sights) where n.name ={name} "
+			+ "match(g:Genre)-[:is]-(m) where g.name=~{gname} return distinct m.name")
+	List<String> getHaveSightsByType(@Param("name") String name, @Param("gname") String gname);
 
 	/**
 	 * 12对应问题模板12 == nm(景点) 类型
@@ -150,5 +158,4 @@ public interface QuestionRepository extends Neo4jRepository<Movie,Long> {
 	 */
 	@Query("match(n:Sights)-[r:is]->(b:Genre) where n.name={name} return b.name")
 	String getSightsTypes(@Param("name") String name);
-	
 }

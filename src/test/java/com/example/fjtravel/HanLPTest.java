@@ -53,7 +53,7 @@ public class HanLPTest {
 	@Test
 	public void TestC() throws Exception{
 		ModelProcess query = new ModelProcess("F:/HanLP/data");
-		String[] questionArr = new String[] {"鼓浪屿周围餐厅"};
+		String[] questionArr = new String[] {"福州公园"};
 		for(String que: questionArr){
 				ArrayList<String> question = query.analyQuery(que);
 				System.err.println(question);
